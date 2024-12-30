@@ -1,12 +1,12 @@
 // ==UserScript==
 // @name         Arma Reforger - Workshop JSON Generator
-// @version      1.0
+// @version      1.0.0
 // @description  Adds a button to generate and copy mod info JSON
 // @author       Slinky
 // @match        https://reforger.armaplatform.com/workshop
 // @match        https://reforger.armaplatform.com/workshop/*
-// @updateURL    https://raw.githubusercontent.com/CallMeSlinky/Arma-Reforger-Workshop-JSON-Generator/main/Arma%20Reforger%20-%20Workshop%20JSON%20Generator-1.0.user.js
-// @downloadURL  https://raw.githubusercontent.com/CallMeSlinky/Arma-Reforger-Workshop-JSON-Generator/main/Arma%20Reforger%20-%20Workshop%20JSON%20Generator-1.0.user.js
+// @updateURL    https://raw.githubusercontent.com/CallMeSlinky/Arma-Reforger-Workshop-JSON-Generator/main/Arma%20Reforger%20-%20Workshop%20JSON%20Generator-1.0.0.user.js
+// @downloadURL  https://raw.githubusercontent.com/CallMeSlinky/Arma-Reforger-Workshop-JSON-Generator/main/Arma%20Reforger%20-%20Workshop%20JSON%20Generator-1.0.0.user.js
 // @grant        none
 // ==/UserScript==
 
@@ -14,7 +14,6 @@
     'use strict';
 
     let buttonAdded = false;
-    let currentURL = window.location.href;
 
     const containerSelector = '#__next > div > main > div > section > div.flex.flex-col.gap-y-4.lg\\:grid.lg\\:grid-cols-3.lg\\:grid-rows-3.lg\\:gap-x-10 > div.flex.flex-col.space-y-8.lg\\:col-start-3.lg\\:col-end-4.lg\\:row-span-3 > dl';
     const nameSelector = 'main > div > section > h1';
