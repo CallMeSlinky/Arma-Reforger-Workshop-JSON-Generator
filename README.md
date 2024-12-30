@@ -1,10 +1,11 @@
 # Arma Reforger - Workshop JSON Generator
 
-This script adds a button to generate and copy mod info JSON on the Arma Reforger Workshop page.
+This script adds a button to generate and copy mod info JSON on the Arma Reforger Workshop page and checks potential mod incompatibility with the latest game version.
 
 ## Features
 - Generates JSON for mod information.
 - Copies JSON to clipboard with a single click.
+- Compares the game version numbers.
 
 ## Installation
 
@@ -27,7 +28,7 @@ To use this script, you need to have **Tampermonkey** installed in your browser.
 Once Tampermonkey is installed, you can install the script by following these steps:
 
 1. Open the script file in your repository:  
-   [Arma Reforger - Workshop JSON Generator](https://github.com/CallMeSlinky/Arma-Reforger-Workshop-JSON-Generator/blob/main/Arma%20Reforger%20-%20Workshop%20JSON%20Generator-1.0.0.user.js).
+   [Arma Reforger - Workshop JSON Generator](https://github.com/CallMeSlinky/Arma-Reforger-Workshop-JSON-Generator/blob/main/Arma%20Reforger%20-%20Workshop%20JSON%20Generator.user.js).
 2. Click the **Raw** button (top-right corner of the file viewer).
 3. Tampermonkey will detect the script and prompt you to install it.
 4. Click **Install** to add the script to Tampermonkey.
