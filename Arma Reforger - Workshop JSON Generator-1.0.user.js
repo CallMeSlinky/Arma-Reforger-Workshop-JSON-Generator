@@ -1,11 +1,12 @@
 // ==UserScript==
 // @name         Arma Reforger - Workshop JSON Generator
-// @namespace    http://tampermonkey.net/
 // @version      1.0
 // @description  Adds a button to generate and copy mod info JSON
 // @author       Slinky
 // @match        https://reforger.armaplatform.com/workshop
 // @match        https://reforger.armaplatform.com/workshop/*
+// @updateURL    https://raw.githubusercontent.com/CallMeSlinky/Arma-Reforger-Workshop-JSON-Generator/main/Arma%20Reforger%20-%20Workshop%20JSON%20Generator-1.0.user.js
+// @downloadURL  https://raw.githubusercontent.com/CallMeSlinky/Arma-Reforger-Workshop-JSON-Generator/main/Arma%20Reforger%20-%20Workshop%20JSON%20Generator-1.0.user.js
 // @grant        none
 // ==/UserScript==
 
