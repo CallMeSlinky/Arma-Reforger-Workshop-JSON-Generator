@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Arma Reforger - Workshop JSON Generator
-// @version      1.0.1
-// @description  Adds a button to generate and copy mod info JSON and checks the game version using the dev-hub JSON.
+// @version      1.0.2
+// @description  Adds a button to generate and copy mod info JSON and checks game version compatibility
 // @author       Slinky
 // @match        https://reforger.armaplatform.com/workshop
 // @match        https://reforger.armaplatform.com/workshop/*
@@ -13,9 +13,8 @@
 (function () {
     'use strict';
 
-    console.log('Script loaded');
-
     let buttonAdded = false;
+    let currentURL = window.location.href;
     const containerSelector = '#__next > div > main > div > section > div.flex.flex-col.gap-y-4.lg\\:grid.lg\\:grid-cols-3.lg\\:grid-rows-3.lg\\:gap-x-10 > div.flex.flex-col.space-y-8.lg\\:col-start-3.lg\\:col-end-4.lg\\:row-span-3 > dl';
     const nameSelector = 'main > div > section > h1';
 
@@ -194,7 +193,6 @@
             });
 
             container.appendChild(button);
-            buttonAdded = true;
         }
     }
 
@@ -207,41 +205,36 @@
     }
 
     function setupObserver() {
-    let currentURL = window.location.href;
+        const observer = new MutationObserver(
+            debounce((mutations) => {
+                const newURL = window.location.href;
+                const container = document.querySelector(containerSelector);
 
-    const observer = new MutationObserver(
-        debounce((mutations) => {
-            for (const mutation of mutations) {
-                if (mutation.type === 'childList') {
-                    const container = document.querySelector(containerSelector);
+                if (newURL !== currentURL) {
+                    currentURL = newURL;
+                    buttonAdded = false;
+                }
 
-                    if (window.location.href !== currentURL) {
-                        console.log("URL changed, resetting buttonAdded");
-                        currentURL = window.location.href;
-                        buttonAdded = false;
-                    }
-
-                    if (container && /^https:\/\/reforger\.armaplatform\.com\/workshop\/[^\/]+$/.test(window.location.href)) {
-                        if (!buttonAdded) {
-                            console.log("Adding button and checking game version");
-                            checkGameVersion();
-                            addCopyButton();
-                        }
-                        break;
+                if (container && /^https:\/\/reforger\.armaplatform\.com\/workshop\/[^\/]+$/.test(newURL)) {
+                    if (!buttonAdded) {
+                        checkGameVersion();
+                        addCopyButton();
+                        buttonAdded = true;
                     }
                 }
-            }
-        }, 300)
-    );
+            }, 300)
+        );
 
-    const targetNode = document.querySelector('#__next');
-    if (targetNode) observer.observe(targetNode, { childList: true, subtree: true });
-}
+        const targetNode = document.querySelector('#__next');
+        if (targetNode) {
+            observer.observe(targetNode, { childList: true, subtree: true });
+        }
+    }
 
     if (/^https:\/\/reforger\.armaplatform\.com\/workshop\/[^\/]+$/.test(window.location.href)) {
-        console.log("Initial load, adding button and checking game version");
         checkGameVersion();
         addCopyButton();
     }
+
     setupObserver();
 })();
