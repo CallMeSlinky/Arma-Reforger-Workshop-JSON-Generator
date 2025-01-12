@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Arma Reforger - Workshop JSON Generator
-// @version      1.0.2
+// @version      1.0.3
 // @description  Adds a button to generate and copy mod info JSON and checks game version compatibility
 // @author       Slinky
 // @match        https://reforger.armaplatform.com/workshop
@@ -17,84 +17,6 @@
     let currentURL = window.location.href;
     const containerSelector = '#__next > div > main > div > section > div.flex.flex-col.gap-y-4.lg\\:grid.lg\\:grid-cols-3.lg\\:grid-rows-3.lg\\:gap-x-10 > div.flex.flex-col.space-y-8.lg\\:col-start-3.lg\\:col-end-4.lg\\:row-span-3 > dl';
     const nameSelector = 'main > div > section > h1';
-
-    function fetchLatestVersion() {
-        return new Promise((resolve, reject) => {
-            GM_xmlhttpRequest({
-                method: 'GET',
-                url: 'https://reforger.armaplatform.com/_next/data/lwAgul8pwxQI5Vgx86mpl/dev-hub.json',
-                onload(response) {
-                    try {
-                        const data = JSON.parse(response.responseText);
-                        const version = data?.pageProps?.version;
-                        if (version) {
-                            resolve(version);
-                        } else {
-                            reject(new Error('Failed to find the version in the JSON.'));
-                        }
-                    } catch (error) {
-                        reject(error);
-                    }
-                },
-                onerror: reject,
-            });
-        });
-    }
-
-    function getCurrentVersion() {
-        const currentGameVersionElement = Array.from(document.querySelectorAll('dt'))
-            .find(dt => dt.textContent.trim() === 'Game Version')
-            ?.parentElement?.querySelector('dd');
-        return currentGameVersionElement?.textContent?.trim() || 'Unknown';
-    }
-
-    function addWarningElement(latestVersion) {
-        const currentGameVersionElement = Array.from(document.querySelectorAll('dt'))
-            .find(dt => dt.textContent.trim() === 'Game Version');
-        if (!currentGameVersionElement) return;
-
-        const existingWarning = currentGameVersionElement.parentElement.querySelector('.version-warning');
-        if (existingWarning) existingWarning.remove();
-
-        const warning = document.createElement('span');
-        warning.className = 'version-warning';
-        warning.style.cssText = 'display: flex; align-items: center; gap: 4px; background-color: #e2a750; color: #fff; padding: 2px 8px; border-radius: 12px; font-size: 12px; margin-left: 8px; cursor: pointer; font-family: Roboto, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"';
-
-        const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-        svg.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
-        svg.setAttribute('width', '16');
-        svg.setAttribute('height', '16');
-        svg.setAttribute('viewBox', '0 0 24 24');
-        svg.setAttribute('fill', 'none');
-        svg.setAttribute('stroke', 'currentColor');
-        svg.setAttribute('stroke-width', '2');
-        svg.setAttribute('stroke-linecap', 'round');
-        svg.setAttribute('stroke-linejoin', 'round');
-        svg.setAttribute('class', 'lucide lucide-triangle-alert');
-        svg.innerHTML = '<path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3"/><path d="M12 9v4"/><path d="M12 17h.01"/>';
-
-        const text = document.createElement('span');
-        text.textContent = 'Outdated';
-
-        warning.appendChild(svg);
-        warning.appendChild(text);
-        warning.title = `Latest game version: ${latestVersion} - This mod may be incompatible.`;
-
-        currentGameVersionElement.appendChild(warning);
-        currentGameVersionElement.style.cssText = 'display: flex; align-items: center;';
-    }
-
-    async function checkGameVersion() {
-        try {
-            const latestVersion = await fetchLatestVersion();
-            const currentVersion = getCurrentVersion();
-            if (latestVersion && currentVersion !== latestVersion) {
-                addWarningElement(latestVersion);
-            }
-        } catch (error) {
-            console.error('Error checking game version:', error);
-        }
-    }
 
     function createCopyButton() {
         const button = document.createElement('button');
@@ -152,9 +74,8 @@
 
         const name = document.querySelector(nameSelector)?.textContent.trim();
         const modId = modIdElement?.textContent?.trim() || 'Not found';
-        const version = versionElement?.textContent?.trim() || 'Not found';
 
-        return { modId, name, version };
+        return { modId, name };
     }
 
     function copyToClipboard(text, textSpan) {
@@ -217,7 +138,6 @@
 
                 if (container && /^https:\/\/reforger\.armaplatform\.com\/workshop\/[^\/]+$/.test(newURL)) {
                     if (!buttonAdded) {
-                        checkGameVersion();
                         addCopyButton();
                         buttonAdded = true;
                     }
@@ -232,7 +152,6 @@
     }
 
     if (/^https:\/\/reforger\.armaplatform\.com\/workshop\/[^\/]+$/.test(window.location.href)) {
-        checkGameVersion();
         addCopyButton();
     }
 
